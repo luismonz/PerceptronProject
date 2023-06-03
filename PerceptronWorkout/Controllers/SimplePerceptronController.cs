@@ -33,7 +33,8 @@ namespace PerceptronWorkout.Controllers
                 expectedOutput = gateData.expectedOutput,
                 input = gateData.input,
                 learningRate = config.learningRate,
-                weights_threshold = config.weights_threshold
+                weights_threshold = config.weights_threshold,
+                maxIterations = config.MaxIterations
             };
 
             learningAlgorithm.Learn(algorithmDTO);

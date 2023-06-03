@@ -13,6 +13,6 @@ namespace PerceptronWorkout.DTOs.SimplePerceptronOperations
         public int[] expectedOutput { get; set; }
         public double[] weights_threshold { get; set; }
         public double learningRate { get; set; }
-
+        public int maxIterations { get; set; }
     }
 }

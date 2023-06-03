@@ -11,21 +11,14 @@ namespace test
     {
         static void Main(string[] args)
         {
-            double[] weights_threshold = { 1.2, -1.2, -0.4 };
+            
+            MenuController menuController = new MenuController();
+            menuController.MainMenu();
 
-            SimplePerceptronController simplePerceptronController = new SimplePerceptronController();
+            Console.Read();
 
-            SimplePerceptronConfiguration configuration = new SimplePerceptronConfiguration()
-            {
-                learningRate = 0.5,
-                logicalGate = "OR",
-                weights_threshold = weights_threshold
-            };
-
-            simplePerceptronController.LearnGate(configuration);
         }
 
 
     }
-
 }

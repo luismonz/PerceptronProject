@@ -1,4 +1,5 @@
 ﻿using PerceptronWorkout.DTOs.SimplePerceptronOperations;
+using PerceptronWorkout.UI.SimplePerceptronUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,32 +11,74 @@ namespace PerceptronWorkout.UseCases.SimplestPerceptron
     public class LearningAlgorithm
     {
 
+        private readonly SimplePerceptronPresentation presentation = new SimplePerceptronPresentation();
+
         public void Learn(SimplePerceptronLearnAlgorithmDTO algorithmDTO)
         {
+            double[] solutionWeights;
 
-            while (true)
+            Console.WriteLine("\nPesos Iniciales: ");
+            presentation.PrintWeights(algorithmDTO.weights_threshold);
+            Console.WriteLine("\nNumero Iteraciones Maxima: " + algorithmDTO.maxIterations + "\n");
+
+            bool foundSolution = hasSolution(algorithmDTO, out solutionWeights);
+
+
+            if (foundSolution)
             {
-                int[] actualOutput = new int[algorithmDTO.input.GetLength(0)];
+                Console.WriteLine("\nSOLUCION");
+                presentation.PrintWeights(solutionWeights);
+                return;
+            }
+
+            Console.WriteLine("\nNO TIENE SOLUCION");
+        }
+
+        private bool hasSolution(SimplePerceptronLearnAlgorithmDTO algorithmDTO, out double[] responseWeight)
+        {
+            int iterationCounter = 0;
+            int[] actualOutput;
+            bool foundSolution = false;
+
+            responseWeight = algorithmDTO.weights_threshold;
+
+            while (algorithmDTO.maxIterations > 0)
+            {
+                iterationCounter++;
+                Console.WriteLine("ITERATION {0}\n", iterationCounter);
+                algorithmDTO.maxIterations--;
 
                 actualOutput = calculateOutput(algorithmDTO.input, algorithmDTO.weights_threshold);
 
-                if (algorithmDTO.expectedOutput.SequenceEqual(actualOutput)) break;
+                if (algorithmDTO.expectedOutput.SequenceEqual(actualOutput))
+                {
+                    foundSolution = true;
+                    break;
+                }
 
                 int[] positions = GetPositionsWhereArraysDiffer(algorithmDTO.expectedOutput, actualOutput);
 
-                UpdateWeightsDTO updateWeightsDTO = new UpdateWeightsDTO()
-                {
-                    weights = algorithmDTO.weights_threshold,
-                    learningRate = algorithmDTO.learningRate,
-                    positions = positions,
-                    inputDB = algorithmDTO.input,
-                    actualOutput = actualOutput
-                };
+                algorithmDTO.weights_threshold = getNewWeight(algorithmDTO, positions, actualOutput);
 
-                algorithmDTO.weights_threshold = UpdateWeights(updateWeightsDTO);
+                responseWeight = algorithmDTO.weights_threshold;
+                Console.WriteLine("-------------------------------------------------");
             }
 
-            Console.Read();
+            return foundSolution;
+        }
+
+        private double[] getNewWeight(SimplePerceptronLearnAlgorithmDTO algorithmDTO, int[] positions, int[] actualOutput)
+        {
+            UpdateWeightsDTO updateWeightsDTO = new UpdateWeightsDTO()
+            {
+                weights = algorithmDTO.weights_threshold,
+                learningRate = algorithmDTO.learningRate,
+                positions = positions,
+                inputDB = algorithmDTO.input,
+                actualOutput = actualOutput
+            };
+            algorithmDTO.weights_threshold = UpdateWeightsThreshold(updateWeightsDTO);
+            return algorithmDTO.weights_threshold;
         }
 
 
@@ -46,6 +89,7 @@ namespace PerceptronWorkout.UseCases.SimplestPerceptron
             for (int i = 0; i < input.GetLength(0); i++)
             {
                 double sum = 0;
+
                 for (int j = 0; j < input.GetLength(1); j++)
                 {
                     sum += input[i, j] * weights_threshold[j];
@@ -55,8 +99,9 @@ namespace PerceptronWorkout.UseCases.SimplestPerceptron
 
                 output[i] = outputSum;
 
-                Console.WriteLine("Resultado para input {0}: {1}", i, outputSum);
             }
+
+            presentation.PrintNewOutput(output);
 
             return output;
         }
@@ -78,25 +123,24 @@ namespace PerceptronWorkout.UseCases.SimplestPerceptron
         }
 
 
-        private double[] UpdateWeights(UpdateWeightsDTO updateWeightsDTO)
+        private double[] UpdateWeightsThreshold(UpdateWeightsDTO updateWeightsDTO)
         {
 
             double[] newWeights = new double[updateWeightsDTO.weights.Length];
+
+            double commonTerm = 2 * updateWeightsDTO.learningRate * updateWeightsDTO.actualOutput[updateWeightsDTO.positions[0]] * -1;
 
             for (int i = 0; i < updateWeightsDTO.weights.Length; i++)
             {
                 if (i < 2)
                 {
-                    newWeights[i] = updateWeightsDTO.weights[i] + 2 * updateWeightsDTO.learningRate * updateWeightsDTO.inputDB[updateWeightsDTO.positions[0], i] * updateWeightsDTO.actualOutput[updateWeightsDTO.positions[0]] * -1;
+                    newWeights[i] = updateWeightsDTO.weights[i] + updateWeightsDTO.inputDB[updateWeightsDTO.positions[0], i] * commonTerm;
                     continue;
                 }
-                newWeights[i] = updateWeightsDTO.weights[i] + 2 * updateWeightsDTO.learningRate * -1 * updateWeightsDTO.actualOutput[updateWeightsDTO.positions[0]] * -1;
+                newWeights[i] = updateWeightsDTO.weights[i] +  commonTerm * -1;
             }
 
-            newWeights.ToList().ForEach(num =>
-            {
-                Console.WriteLine(num);
-            });
+            presentation.PrintWeights(newWeights);
 
             return newWeights;
         }

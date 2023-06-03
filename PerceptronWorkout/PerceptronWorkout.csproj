@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clients\ExecutionModes\ManualModeClient.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\SimplePerceptronController.cs" />
     <Compile Include="DTOs\SimplePerceptronOperations\GateDataDTO.cs" />
     <Compile Include="DTOs\SimplePerceptronOperations\SimplePerceptronConfiguration.cs" />
@@ -54,7 +56,9 @@
     <Compile Include="Gateways\UnitOfWork.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\SimplePerceptronUI\SimplePerceptronPresentation.cs" />
     <Compile Include="UseCases\SimplestPerceptron\LearningAlgorithm.cs" />
+    <Compile Include="Validators\UserInputValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
