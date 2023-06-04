@@ -80,14 +80,14 @@ namespace PerceptronWorkout.Controllers
 
         public void DeveloperTestingMode()
         {
-            double[] weights_threshold = { 1.2, -1.2, -0.4 };
+            double[] weights_threshold = { 1.4, -1.4, -0.5 };
 
             SimplePerceptronConfiguration configuration = new SimplePerceptronConfiguration()
             {
                 learningRate = 0.5,
                 logicalGate = "OR",
                 weights_threshold = weights_threshold,
-                MaxIterations = 10
+                MaxIterations = 15
             };
 
             SimplePerceptronController simplePerceptronController = new SimplePerceptronController();

@@ -48,7 +48,7 @@ namespace PerceptronWorkout.UseCases.SimplestPerceptron
                 Console.WriteLine("ITERATION {0}\n", iterationCounter);
                 algorithmDTO.maxIterations--;
 
-                actualOutput = calculateOutput(algorithmDTO.input, algorithmDTO.weights_threshold);
+                actualOutput = calculateNewOutput(algorithmDTO.input, algorithmDTO.weights_threshold);
 
                 if (algorithmDTO.expectedOutput.SequenceEqual(actualOutput))
                 {
@@ -61,6 +61,7 @@ namespace PerceptronWorkout.UseCases.SimplestPerceptron
                 algorithmDTO.weights_threshold = getNewWeight(algorithmDTO, positions, actualOutput);
 
                 responseWeight = algorithmDTO.weights_threshold;
+
                 Console.WriteLine("-------------------------------------------------");
             }
 
@@ -82,7 +83,7 @@ namespace PerceptronWorkout.UseCases.SimplestPerceptron
         }
 
 
-        private int[] calculateOutput(int[,] input, double[] weights_threshold)
+        private int[] calculateNewOutput(int[,] input, double[] weights_threshold)
         {
             int[] output = new int[input.GetLength(0)];
 
@@ -90,10 +91,22 @@ namespace PerceptronWorkout.UseCases.SimplestPerceptron
             {
                 double sum = 0;
 
-                for (int j = 0; j < input.GetLength(1); j++)
+                for (int j = 0; j < weights_threshold.Length; j++)
                 {
-                    sum += input[i, j] * weights_threshold[j];
+                    
+                    if(j<2)
+                    {
+                        Console.Write("{0:+0;-0}({1}) ", input[i,j], weights_threshold[j]);
+                        sum += input[i, j] * weights_threshold[j];
+                        continue;
+                    }
+
+                    Console.Write("{0}({1})", -1, weights_threshold[j]);
+                    sum += -1* weights_threshold[j];
                 }
+
+                Console.Write(" = " + sum);
+                Console.WriteLine("");
 
                 int outputSum = (sum >= weights_threshold[2]) ? 1 : -1;
 
