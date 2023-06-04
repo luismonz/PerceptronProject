@@ -13,8 +13,7 @@ namespace test
         {
             
             MenuController menuController = new MenuController();
-            //menuController.MainMenu();
-            menuController.DeveloperTestingMode();
+            menuController.MainMenu();
 
             Console.Read();
 
