@@ -12,13 +12,13 @@ namespace PerceptronWorkout.Controllers
     public class SimplePerceptronController
     {
 
-        public LearningAlgorithm learningAlgorithm;
+        public BinaryStepFunctionAlgorithm learningAlgorithm;
         private UnitOfWork _unitOfWork = UnitOfWork.GetInstance();
         readonly IDictionary<string, GateDataDTO> supportedGates;
 
         public SimplePerceptronController()
         {
-            learningAlgorithm = new LearningAlgorithm();
+            learningAlgorithm = new BinaryStepFunctionAlgorithm();
             supportedGates = new Dictionary<string, GateDataDTO>();
             AddSupportedGates();
         }
@@ -40,6 +40,12 @@ namespace PerceptronWorkout.Controllers
             learningAlgorithm.Learn(algorithmDTO);
         }
 
+        private void AddSupportedGates()
+        {
+            supportedGates.Add("OR", GetORData());
+            supportedGates.Add("AND", GetANDData());
+        }
+
         private GateDataDTO GetORData()
         {
             return _unitOfWork.gate_Or_Repository.gateData();
@@ -48,12 +54,6 @@ namespace PerceptronWorkout.Controllers
         private GateDataDTO GetANDData()
         {
             return _unitOfWork.gate_And_Repository.gateData();
-        }
-
-        private void AddSupportedGates()
-        {
-            supportedGates.Add("OR", GetORData());
-            supportedGates.Add("AND", GetANDData());
         }
 
     }

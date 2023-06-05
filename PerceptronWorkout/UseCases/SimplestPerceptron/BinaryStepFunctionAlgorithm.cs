@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PerceptronWorkout.UseCases.SimplestPerceptron
 {
-    public class LearningAlgorithm
+    public class BinaryStepFunctionAlgorithm
     {
 
         private readonly SimplePerceptronPresentation presentation = new SimplePerceptronPresentation();
