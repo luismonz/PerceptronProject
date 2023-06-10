@@ -141,16 +141,20 @@ namespace PerceptronWorkout.UseCases.SimplestPerceptron
 
             double[] newWeights = new double[updateWeightsDTO.weights.Length];
 
-            double commonTerm = 2 * updateWeightsDTO.learningRate * updateWeightsDTO.actualOutput[updateWeightsDTO.positions[0]] * -1;
+            double actualOutput = updateWeightsDTO.actualOutput[updateWeightsDTO.positions[0]] * -1;
+
+            double commonTerm = 2 * updateWeightsDTO.learningRate * actualOutput;
 
             for (int i = 0; i < updateWeightsDTO.weights.Length; i++)
             {
                 if (i < 2)
                 {
                     newWeights[i] = updateWeightsDTO.weights[i] + updateWeightsDTO.inputDB[updateWeightsDTO.positions[0], i] * commonTerm;
+                    Console.WriteLine("w{0} = {1} + 2({2})({3})({4}) = {5}", i, updateWeightsDTO.weights[i], updateWeightsDTO.learningRate, actualOutput, updateWeightsDTO.inputDB[updateWeightsDTO.positions[0], i], newWeights[i]);
                     continue;
                 }
                 newWeights[i] = updateWeightsDTO.weights[i] +  commonTerm * -1;
+                Console.WriteLine("U = {1} + 2({2})({3})(-1) = {4}", i, updateWeightsDTO.weights[i], updateWeightsDTO.learningRate, updateWeightsDTO.actualOutput[updateWeightsDTO.positions[0]], newWeights[i]);
             }
 
             presentation.PrintWeights(newWeights);
